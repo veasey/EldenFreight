@@ -5,41 +5,27 @@ namespace App\Service;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
+use Psr\Log\LoggerInterface;
 
 class ShippingService
 {
     private HttpClientInterface $httpClient;
     private CacheInterface $cache;
-    private array $courierApis;
+    private ApiConfig $apiConfig;
+    private LoggerInterface $logger;
 
-    public function __construct(HttpClientInterface $httpClient, CacheInterface $cache)
+    public function __construct(
+        HttpClientInterface $httpClient, 
+        CacheInterface $cache,
+        ApiConfig $apiConfig,
+        LoggerInterface $logger
+
+    )
     {
         $this->httpClient = $httpClient;
         $this->cache = $cache;
-
-        // Load API keys from .env
-        $this->courierApis = [
-            'royal_mail' => [
-                'url' => 'https://api.royalmail.com/shipping-rates',
-                'key' => $_ENV['ROYAL_MAIL_API_KEY'] ?? ''
-            ],
-            'dhl' => [
-                'url' => 'https://api.dhl.com/rates',
-                'key' => $_ENV['DHL_API_KEY'] ?? ''
-            ],
-            'dpd' => [
-                'url' => 'https://api.dpd.co.uk/shipping-rates',
-                'key' => $_ENV['DPD_API_KEY'] ?? ''
-            ],
-            'evri' => [
-                'url' => 'https://api.evri.com/rates',
-                'key' => $_ENV['EVRI_API_KEY'] ?? ''
-            ],
-            'ups' => [
-                'url' => 'https://onlinetools.ups.com/rates',
-                'key' => $_ENV['UPS_API_KEY'] ?? ''
-            ]
-        ];
+        $this->logger = $logger;
+        $this->apiConfig = $apiConfig;
     }
 
     public function getShippingRates(array $shipmentDetails): array
@@ -48,7 +34,15 @@ class ShippingService
             $item->expiresAfter(86400); // Cache for 24 hours
 
             $responses = [];
-            foreach ($this->courierApis as $courier => $api) {
+            foreach ($this->apiConfig as $courier => $api) {
+
+                // skip couriers that have no had a key entered yet
+                if (empty($api['key'])) {
+                    $this->logger->error($courier, [
+                        'Error' => 'No configured. No API key'
+                    ]);
+                }
+
                 $responses[$courier] = $this->fetchShippingRate($courier, $api, $shipmentDetails);
             }
 
