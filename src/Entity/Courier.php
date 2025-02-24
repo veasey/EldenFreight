@@ -12,6 +12,8 @@ class Courier
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+    
+    #[ORM\Column(type: 'string')] 
     private ?string $courierName = '';
 
     public function getId(): ?int
@@ -22,5 +24,11 @@ class Courier
     public function getCourierName(): ?string
     {
         return $this->courierName;
+    }
+
+    public function setCourierName(string $courierName): self
+    {
+        $this->courierName = $courierName;
+        return $this;
     }
 }
