@@ -20,9 +20,24 @@ final class Version20250224111149 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE courier (id INT AUTO_INCREMENT NOT NULL, courier_name VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci`');
-        $this->addSql('CREATE TABLE shipping_rate (id INT AUTO_INCREMENT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci`');
-        $this->addSql('CREATE TABLE shipping_zone (id INT AUTO_INCREMENT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci`');
+        $this->addSql('CREATE TABLE courier (
+            id INT AUTO_INCREMENT NOT NULL,
+            courier_name VARCHAR(255) NOT NULL,
+            PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci`');
+        $this->addSql('CREATE TABLE shipping_rate (
+            id INT AUTO_INCREMENT NOT NULL,
+            courier_id INT NOT NULL,
+            shipping_zone_id INT NOT NULL,
+            shipping_rate_name VARCHAR(255) NOT NULL,
+            PRIMARY KEY(id),
+            CONSTRAINT FK_COURIER FOREIGN KEY (courier_id) REFERENCES courier (id),
+            CONSTRAINT FK_SHIPPING_ZONE FOREIGN KEY (shipping_zone_id) REFERENCES shipping_zone (id)
+        ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci`');
+        $this->addSql('CREATE TABLE shipping_zone (
+            id INT AUTO_INCREMENT NOT NULL,
+            courier_id INT NOT NULL,
+            shipping_zone_name VARCHAR(255) NOT NULL,
+            PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci`');
     }
 
     public function down(Schema $schema): void

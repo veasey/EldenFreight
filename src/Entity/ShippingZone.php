@@ -12,7 +12,10 @@ class ShippingZone
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-    private ?int $courierId = null;
+    #[ORM\ManyToOne(targetEntity: Courier::class)]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
+    private ?Courier $courier = null;
+    #[ORM\Column(type: 'string', length: 255)]
     private ?string $shippingZoneName = '';
 
     public function getId(): ?int
@@ -20,9 +23,9 @@ class ShippingZone
         return $this->id;
     }
 
-    public function getCourierId(): ?int
+    public function getCourier(): ?Courier
     {
-        return $this->courierId;
+        return $this->courier;
     }
 
     public function getShippingZoneName(): ?string

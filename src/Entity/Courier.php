@@ -13,7 +13,7 @@ class Courier
     #[ORM\Column]
     private ?int $id = null;
     
-    #[ORM\Column(type: 'string')] 
+    #[ORM\Column(type: 'string', length: 255)]
     private ?string $courierName = '';
 
     public function getId(): ?int
