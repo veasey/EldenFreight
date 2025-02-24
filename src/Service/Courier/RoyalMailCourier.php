@@ -17,8 +17,7 @@ class RoyalMailCourier implements CourierInterface
         try {
             
             // get from DB
-            
-            return $response->toArray();
+            return [];
         } catch (\Exception $e) {
             return ['error' => $e->getMessage()];
         }

@@ -1,0 +1,29 @@
+{# templates/shipping/landing.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Shipping Rates Landing Page{% endblock %}
+
+{% block body %}
+    <h1>Welcome to the Shipping Rates Service</h1>
+    <p>Enter your shipping details below to get the best rates.</p>
+
+    <form action="{{ path('app_shipping_get_rates') }}" method="post">
+        <div>
+            <label for="origin">Origin:</label>
+            <input type="text" id="origin" name="origin" required>
+        </div>
+        <div>
+            <label for="destination">Destination:</label>
+            <input type="text" id="destination" name="destination" required>
+        </div>
+        <div>
+            <label for="weight">Weight (kg):</label>
+            <input type="number" id="weight" name="weight" step="0.01" required>
+        </div>
+        <div>
+            <label for="dimensions">Dimensions (cm):</label>
+            <input type="text" id="dimensions" name="dimensions" placeholder="LxWxH" required>
+        </div>
+        <button type="submit">Get Rates</button>
+    </form>
+{% endblock %}
