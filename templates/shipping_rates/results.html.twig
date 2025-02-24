@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Shipping Rates Results{% endblock %}
+
+{% block body %}
+    <h1>Shipping Rates</h1>
+    
+    {% if shippingRates is not empty %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Courier</th>
+                    <th>Shipping Rate Name</th>
+                    <th>Price (GBP)</th>
+                    <th>Max Weight (kg)</th>
+                    <th>Max Value (GBP)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for rate in shippingRates %}
+                    <tr>
+                        <td>{{ rate.courierName }}</td>
+                        <td>{{ rate.shippingRateName }}</td>
+                        <td>{{ rate.price|number_format(2, '.', ',') }}</td>
+                        <td>{{ rate.maxWeight }}</td>
+                        <td>{{ rate.maxValue }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No shipping rates found for the selected criteria.</p>
+    {% endif %}
+
+    <a href="{{ path('app_shipping_rates') }}" class="btn btn-secondary">Back to Form</a>
+{% endblock %}

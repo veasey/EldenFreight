@@ -30,19 +30,19 @@ final class Version20250224150000 extends AbstractMigration
         $this->addSql("
             INSERT INTO shipping_zone (courier_id, shipping_zone_name) VALUES
             (1, 'Limgrave'),
-            (1, 'Weeping Peninsula'),
-            (2, 'Caelid'),
-            (3, 'Altus Plateau'),
-            (3, 'Leyndell, Royal Capital'),
-            (4, 'Mt. Gelmir'),
-            (5, 'Liurnia of the Lakes'),
-            (5, 'Ainsel River'),
-            (5, 'Siofra River'),
-            (5, 'Deeproot Depths'),
-            (5, 'Consecrated Snowfield'),
-            (5, 'Lake of Rot'),
-            (5, 'Mohgwyn Palace'),
-            (5, 'Farum Azula')
+            (2, 'Weeping Peninsula'),
+            (3, 'Caelid'),
+            (4, 'Altus Plateau'),
+            (5, 'Leyndell, Royal Capital'),
+            (6, 'Mt. Gelmir'),
+            (7, 'Liurnia of the Lakes'),
+            (8, 'Ainsel River'),
+            (9, 'Siofra River'),
+            (10, 'Deeproot Depths'),
+            (11, 'Consecrated Snowfield'),
+            (12, 'Lake of Rot'),
+            (13, 'Mohgwyn Palace'),
+            (14, 'Farum Azula')
         ");
 
         // Insert Elden Ring-themed shipping rates

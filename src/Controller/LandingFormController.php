@@ -4,12 +4,16 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\ShippingService;
+use App\Form\ShippingRateRequestType;
 
 class LandingFormController extends AbstractController
 {
+    private ShippingService $shippingService;
+
     public function __construct(ShippingService $shippingService)
     {
         $this->shippingService = $shippingService;
@@ -32,20 +36,13 @@ class LandingFormController extends AbstractController
             $data = $form->getData();
 
             // Call the shipping rate service
-            $shippingRates = $this->shippingRateService->getRates(
-                $data['origin'],
-                $data['destination'],
-                $data['weight'],
-                $data['dimensions']
-            );
+            $shippingRates = $this->shippingService->getShippingRates($data);
 
-            return $this->render('shipping/rate.html.twig', [
+            return $this->render('shipping_rates/results.html.twig', [
                 'shippingRates' => $shippingRates,
             ]);
         }
 
-        return $this->render('shipping_rates/results.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->render('shipping_rates/form.html.twig');
     }
 }
