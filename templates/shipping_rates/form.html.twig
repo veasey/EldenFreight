@@ -7,23 +7,23 @@
     <h1>Welcome to the Shipping Rates Service</h1>
     <p>Enter your shipping details below to get the best rates.</p>
 
-    <form action="{{ path('app_shipping_get_rates') }}" method="post">
-        <div>
+    <form action="{{ path('app_shipping_get_rates') }}" method="post" class="form-group">
+        <div class="form-control">
             <label for="origin">Origin:</label>
-            <input type="text" id="origin" name="origin" required>
+            <input type="text" id="origin" name="origin" class="form-control" required>
         </div>
-        <div>
+        <div class="form-control">
             <label for="destination">Destination:</label>
-            <input type="text" id="destination" name="destination" required>
+            <input type="text" id="destination" name="destination" class="form-control" required>
         </div>
-        <div>
+        <div class="form-control">
             <label for="weight">Weight (kg):</label>
-            <input type="number" id="weight" name="weight" step="0.01" required>
+            <input type="number" id="weight" name="weight" class="form-control" step="0.01" required>
         </div>
-        <div>
+        <div class="form-control">
             <label for="dimensions">Dimensions (cm):</label>
-            <input type="text" id="dimensions" name="dimensions" placeholder="LxWxH" required>
+            <input type="text" id="dimensions" name="dimensions" class="form-control" placeholder="LxWxH" required>
         </div>
-        <button type="submit">Get Rates</button>
+        <button type="submit" class="btn btn-primary">Get Rates</button>
     </form>
 {% endblock %}
