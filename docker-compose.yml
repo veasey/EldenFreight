@@ -1,8 +1,9 @@
-version: '3.8'
 
 services:
   app:
-    image: php:8.2-fpm
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: symfony_app
     working_dir: /var/www
     volumes:
@@ -11,6 +12,7 @@ services:
       - APP_ENV=dev
     depends_on:
       - db
+    entrypoint: ["docker-php-entrypoint", "php-fpm"]
 
   db:
     image: mysql:8.0
