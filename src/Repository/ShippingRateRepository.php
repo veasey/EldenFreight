@@ -40,11 +40,10 @@ class ShippingRateRepository extends ServiceEntityRepository
     public function findMatchingRates(int $originId, int $destinationId, ?float $weight): array
     {
         $queryBuilder = $this->createQueryBuilder('sr')
-        ->leftJoin('sr.courier', 'c')
-        ->leftJoin('sr.shippingZones', 'sz')
-        ->addSelect('c', 'sz')
-        ->groupBy('sr.id')
-        ->orderBy('sr.price', 'ASC');
+            ->leftJoin('sr.courier', 'c')
+            ->leftJoin('sr.shippingZones', 'sz')
+            ->addSelect('c', 'sz')
+            ->orderBy('sr.price', 'ASC');
 
         // Filter couriers that either:
         // - Cover BOTH the origin and destination zones
@@ -64,9 +63,13 @@ class ShippingRateRepository extends ServiceEntityRepository
                 ->setParameter('weight', $weight);
         }
 
+        // Use DISTINCT to ensure unique results for ShippingRates
+        $queryBuilder->distinct();
+
         $shippingRates = $queryBuilder->getQuery()->getResult();
 
         // Use DTO for transformation
         return array_map(fn($rate) => ShippingRateDTO::fromEntity($rate), $shippingRates);
     }
+
 }

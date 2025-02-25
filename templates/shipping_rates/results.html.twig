@@ -19,11 +19,11 @@
             <tbody>
                 {% for rate in shippingRates %}
                     <tr>
-                        <td>{{ rate.courierName }}</td>
-                        <td>{{ rate.shippingRateName }}</td>
+                        <td>{{ rate.courier_name }}</td>
+                        <td>{{ rate.shipping_rate_name }}</td>
                         <td>{{ rate.price|number_format(2, '.', ',') }}</td>
-                        <td>{{ rate.maxWeight }}</td>
-                        <td>{{ rate.maxValue }}</td>
+                        <td>{{ rate.max_weight }}</td>
+                        <td>{{ rate.max_value }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
