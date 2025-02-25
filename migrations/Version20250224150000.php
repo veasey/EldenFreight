@@ -17,8 +17,7 @@ final class Version20250224150000 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // Insert Elden Ring-themed couriers (Courier Services)
-        $this->addSql("
-            INSERT INTO courier (courier_name) VALUES
+        $this->addSql("INSERT INTO courier (courier_name) VALUES
             ('Erdtree Express'),
             ('Radahn’s War Couriers'),
             ('Leyndell Royal Mail'),
@@ -27,27 +26,25 @@ final class Version20250224150000 extends AbstractMigration
         ");
 
         // Insert Elden Ring-themed shipping zones (Map Regions)
-        $this->addSql("
-            INSERT INTO shipping_zone (courier_id, shipping_zone_name) VALUES
-            (1, 'Limgrave'),
-            (2, 'Weeping Peninsula'),
-            (3, 'Caelid'),
-            (4, 'Altus Plateau'),
-            (5, 'Leyndell, Royal Capital'),
-            (6, 'Mt. Gelmir'),
-            (7, 'Liurnia of the Lakes'),
-            (8, 'Ainsel River'),
-            (9, 'Siofra River'),
-            (10, 'Deeproot Depths'),
-            (11, 'Consecrated Snowfield'),
-            (12, 'Lake of Rot'),
-            (13, 'Mohgwyn Palace'),
-            (14, 'Farum Azula')
+        $this->addSql("INSERT INTO shipping_zone (shipping_zone_name) VALUES
+            ('Limgrave'),
+            ('Weeping Peninsula'),
+            ('Caelid'),
+            ('Altus Plateau'),
+            ('Leyndell, Royal Capital'),
+            ('Mt. Gelmir'),
+            ('Liurnia of the Lakes'),
+            ('Ainsel River'),
+            ('Siofra River'),
+            ('Deeproot Depths'),
+            ('Consecrated Snowfield'),
+            ('Lake of Rot'),
+            ('Mohgwyn Palace'),
+            ('Farum Azula')
         ");
 
-        // Insert Elden Ring-themed shipping rates
-        $this->addSql("
-            INSERT INTO shipping_rate (courier_id, shipping_zone_id, shipping_rate_name, max_weight, max_value) VALUES
+        // Insert Elden Ring-themed shipping rates for couriers that have shipping zones
+        $this->addSql("INSERT INTO shipping_rate (courier_id, shipping_zone_id, shipping_rate_name, max_weight, max_value) VALUES
             (1, 1, 'Torrent Express - 1-Day Delivery', 5.00, 50.00),
             (1, 2, 'Golden Order Standard - 3-Day Delivery', 20.00, 200.00),
             (2, 3, 'Radahn’s War Freight', 100.00, 1000.00),
