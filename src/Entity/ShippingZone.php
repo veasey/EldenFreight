@@ -48,4 +48,9 @@ class ShippingZone
     {
         return $this->shippingRates;
     }
+
+    public function getName(): ?string
+    {
+        return $this->shippingZoneName;
+    }
 }

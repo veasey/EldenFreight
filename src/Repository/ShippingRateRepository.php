@@ -4,6 +4,7 @@
 namespace App\Repository;
 
 use App\Entity\ShippingRate;
+use App\DTO\ShippingRateDTO;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -12,6 +13,20 @@ class ShippingRateRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, ShippingRate::class);
+    }
+
+    public function findAll(): array
+    {
+        $qb = $this->createQueryBuilder('sr')
+            ->leftJoin('sr.courier', 'c')
+            ->leftJoin('sr.shippingZones', 'sz')
+            ->addSelect('c', 'sz')
+            ->getQuery();
+
+        $shippingRates = $qb->getResult();
+
+        // Use DTO for transformation
+        return array_map(fn($rate) => ShippingRateDTO::fromEntity($rate), $shippingRates);
     }
 
     /**
@@ -24,7 +39,9 @@ class ShippingRateRepository extends ServiceEntityRepository
      */
     public function findMatchingRates(int $originId, int $destinationId, ?float $weight): array
     {
-        $queryBuilder = $this->createQueryBuilder('s')
+        $queryBuilder = $this->createQueryBuilder('s');
+
+        /*
         // Join with ShippingZone for origin and destination by ID
         ->innerJoin('s.shippingZones', 'origin')
         ->innerJoin('s.shippingZones', 'destination')
@@ -41,7 +58,7 @@ class ShippingRateRepository extends ServiceEntityRepository
 
         // Set parameters for origin and destination IDs
         $queryBuilder->setParameter('originId', $originId)
-        ->setParameter('destinationId', $destinationId);        
+        ->setParameter('destinationId', $destinationId);        */
 
         // Order by price ascending
         return $queryBuilder

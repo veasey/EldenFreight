@@ -33,6 +33,11 @@ class ShippingService
         );
     }
 
+    public function getShippingRatesAll(): array
+    {
+        return $this->shippingRateRepository->findAll();
+    }
+
     private function fetchShippingRate(string $courier, array $api, array $shipmentDetails): array
     {
         try {

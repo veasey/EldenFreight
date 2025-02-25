@@ -38,4 +38,12 @@ final class ApiController extends AbstractController
 
         return $this->json($rates);
     }
+
+    #[Route('/api/shipping-rates-all', name: 'shipping_rates_all', methods: ['GET'])]
+    public function getShippingRatesAll(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $rates = $this->shippingService->getShippingRatesAll();
+        return $this->json($rates);
+    }
 }

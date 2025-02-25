@@ -62,4 +62,33 @@ class ShippingRate
         $this->shippingZones->removeElement($shippingZone);
         return $this;
     }
+
+    public function getShippingRateName(): ?string
+    {
+        return $this->shippingRateName;  // This method needs to be here
+    }
+
+    public function getMaxWeight(): ?float
+    {
+        return $this->maxWeight;  // This method needs to be here
+    }
+
+    public function getMaxValue(): ?float
+    {
+        return $this->maxValue;  // This method needs to be here
+    }
+
+    public function getPrice(): ?float
+    {
+        return $this->price;  // This method needs to be here
+    }
+
+    public function getShippingZoneNames(): array
+    {
+        $zoneNames = [];
+        foreach ($this->shippingZones as $zone) {
+            $zoneNames[] = $zone->getName(); // Assuming ShippingZone has a getName() method
+        }
+        return $zoneNames;
+    }
 }
