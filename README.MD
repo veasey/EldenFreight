@@ -1,4 +1,5 @@
-# Elden Ring Shipping Rates API
+# EldenFreight
+## Elden Ring Shipping Rates API
 
 A fan made sequel.
 
