@@ -3,13 +3,13 @@
 
 namespace App\Form;
 
-use App\Entity\ShippingRate;
+use App\Entity\ShippingZone;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ShippingRateType extends AbstractType
@@ -24,13 +24,15 @@ class ShippingRateType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('origin', TextType::class, [
-                'label' => 'Origin Location',
-                'required' => true, 
+            ->add('origin', ChoiceType::class, [
+                'choices' => $this->getShippingZoneChoices(),
+                'placeholder' => 'Select Origin',
+                'required' => true,
             ])
-            ->add('destination', TextType::class, [
-                'label' => 'Destination Location',
-                'required' => true, 
+            ->add('destination', ChoiceType::class, [
+                'choices' => $this->getShippingZoneChoices(),
+                'placeholder' => 'Select Destination',
+                'required' => true,
             ])
             ->add('weight', NumberType::class, [
                 'label' => 'Weight (kg)', 
