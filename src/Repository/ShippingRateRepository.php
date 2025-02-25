@@ -39,31 +39,34 @@ class ShippingRateRepository extends ServiceEntityRepository
      */
     public function findMatchingRates(int $originId, int $destinationId, ?float $weight): array
     {
-        $queryBuilder = $this->createQueryBuilder('s');
+        $queryBuilder = $this->createQueryBuilder('sr')
+        ->leftJoin('sr.courier', 'c')
+        ->leftJoin('sr.shippingZones', 'sz')
+        ->addSelect('c', 'sz')
+        ->groupBy('sr.id')
+        ->orderBy('sr.price', 'ASC');
 
-        /*
-        // Join with ShippingZone for origin and destination by ID
-        ->innerJoin('s.shippingZones', 'origin')
-        ->innerJoin('s.shippingZones', 'destination')
-        
-        // Filter by origin and destination ShippingZone IDs
-        ->andWhere('origin.id = :originId')
-        ->andWhere('destination.id = :destinationId');
-    
-        // If weight is provided, filter by max weight
-        if ($weight) {
-            $queryBuilder->andWhere('s.maxWeight >= :weight')
-            ->setParameter('weight', $weight);
+        // Filter couriers that either:
+        // - Cover BOTH the origin and destination zones
+        // - OR have no zones at all
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()->orX(
+                'sz.id IS NULL',
+                '(sz.id = :originId OR sz.id = :destinationId)'
+            )
+        )
+        ->setParameter('originId', $originId)
+        ->setParameter('destinationId', $destinationId);
+
+        // Filter by max weight if provided
+        if ($weight !== null) {
+            $queryBuilder->andWhere('sr.maxWeight >= :weight')
+                ->setParameter('weight', $weight);
         }
 
-        // Set parameters for origin and destination IDs
-        $queryBuilder->setParameter('originId', $originId)
-        ->setParameter('destinationId', $destinationId);        */
+        $shippingRates = $queryBuilder->getQuery()->getResult();
 
-        // Order by price ascending
-        return $queryBuilder
-            ->orderBy('s.price', 'ASC')
-            ->getQuery()
-            ->getResult();
+        // Use DTO for transformation
+        return array_map(fn($rate) => ShippingRateDTO::fromEntity($rate), $shippingRates);
     }
 }
