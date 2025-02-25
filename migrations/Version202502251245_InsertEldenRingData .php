@@ -7,11 +7,14 @@ namespace DoctrineMigrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
-final class Version20250224150000 extends AbstractMigration
+/**
+ * Auto-generated Migration: Please modify to your needs!
+ */
+final class Version202502251245_InsertEldenRingData extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Insert Elden Ring-themed couriers, shipping zones, and shipping rates';
+        return 'Insert Elden Ring-themed shipping data';
     }
 
     public function up(Schema $schema): void
@@ -30,17 +33,17 @@ final class Version20250224150000 extends AbstractMigration
             (1, 'Limgrave'),
             (1, 'Weeping Peninsula'),
             (2, 'Caelid'),
-            (2, 'Altus Plateau'),
+            (3, 'Altus Plateau'),
             (3, 'Leyndell, Royal Capital'),
-            (4, 'Mt. Gelmir'),
-            (4, 'Liurnia of the Lakes'),
-            (5, 'Ainsel River'),
-            (5, 'Siofra River'),
-            (6, 'Deeproot Depths'),
-            (7, 'Consecrated Snowfield'),
-            (8, 'Lake of Rot'),
-            (9, 'Mohgwyn Palace'),
-            (10, 'Farum Azula')
+            (3, 'Mt. Gelmir'),
+            (3, 'Liurnia of the Lakes'),
+            (4, 'Ainsel River'),
+            (4, 'Siofra River'),
+            (4, 'Deeproot Depths'),
+            (4, 'Consecrated Snowfield'),
+            (5, 'Lake of Rot'),
+            (5, 'Mohgwyn Palace'),
+            (5, 'Farum Azula')
         ");
 
         // Insert Elden Ring-themed shipping rates for couriers that have shipping zones
@@ -61,24 +64,27 @@ final class Version20250224150000 extends AbstractMigration
             (5, 14, 'Farum Azula Timeless Delivery', 100.00, 5000.00, 100.00)
         ");
 
+        // linker table
+        $this->addSql("INSERT INTO shipping_rate_shipping_zone (shipping_rate_id, shipping_zone_id) VALUES
+            (1, 1),  -- Torrent Express - 1-Day Delivery for Limgrave
+            (1, 2),  -- Torrent Express - 1-Day Delivery for Weeping Peninsula
+            (2, 3),  -- Radahn’s War Freight for Caelid
+            (3, 4),  -- Altus Gold Tier - Premium Delivery for Altus Plateau
+            (3, 5),  -- Leyndell Capital Express for Leyndell, Royal Capital
+            (4, 6),  -- Volcano Manor Secret Shipment for Ainsel River
+            (5, 7),  -- Liurnia Moonlit Delivery for Liurnia of the Lakes
+            (5, 8),  -- Ainsel River Ghost Couriers for Siofra River
+            (5, 9),  -- Siofra River Lost Relic Transport for Deeproot Depths
+            (5, 10), -- Deeproot Depths Hollow Freight for Consecrated Snowfield
+            (5, 11), -- Consecrated Snowfield Frost Express for Lake of Rot
+            (5, 12), -- Lake of Rot Hazardous Materials for Mohgwyn Palace
+            (5, 13), -- Mohgwyn Bloodstained Cargo for Farum Azula
+            (5, 14)  -- Farum Azula Timeless Delivery for Farum Azula
+        ");
     }
 
     public function down(Schema $schema): void
     {
-        // Rollback delete statements
-        $this->addSql("DELETE FROM shipping_rate WHERE shipping_rate_name IN 
-            ('Torrent Express - 1-Day Delivery', 'Golden Order Standard - 3-Day Delivery', 'Radahn’s War Freight', 
-            'Altus Gold Tier - Premium Delivery', 'Leyndell Capital Express', 'Volcano Manor Secret Shipment', 
-            'Liurnia Moonlit Delivery', 'Ainsel River Ghost Couriers', 'Siofra River Lost Relic Transport', 
-            'Deeproot Depths Hollow Freight', 'Consecrated Snowfield Frost Express', 'Lake of Rot Hazardous Materials', 
-            'Mohgwyn Bloodstained Cargo', 'Farum Azula Timeless Delivery')");
-
-        $this->addSql("DELETE FROM shipping_zone WHERE shipping_zone_name IN 
-            ('Limgrave', 'Weeping Peninsula', 'Caelid', 'Altus Plateau', 'Leyndell, Royal Capital', 'Mt. Gelmir', 
-            'Liurnia of the Lakes', 'Ainsel River', 'Siofra River', 'Deeproot Depths', 'Consecrated Snowfield', 
-            'Lake of Rot', 'Mohgwyn Palace', 'Farum Azula')");
-
-        $this->addSql("DELETE FROM courier WHERE courier_name IN 
-            ('Erdtree Express', 'Radahn’s War Couriers', 'Leyndell Royal Mail', 'Volcano Manor Deliveries', 'Ranni’s Dark Moon Couriers')");
+        // No need to remove the data, just drop tables.
     }
 }

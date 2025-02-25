@@ -20,8 +20,9 @@ class ShippingZone
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $shippingZoneName = null;
 
-    #[ORM\ManyToMany(targetEntity: ShippingRate::class, mappedBy: 'shippingZones')]
-    private iterable $shippingRates; // Many ShippingRates
+    #[ORM\ManyToMany(targetEntity: ShippingRate::class, inversedBy: 'shippingZones')]
+    #[ORM\JoinTable(name: 'shipping_rate_shipping_zone')]
+    private iterable $shippingRates;
 
     public function __construct()
     {

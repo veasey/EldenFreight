@@ -29,7 +29,7 @@ class LandingFormController extends AbstractController
         ]);
     }
 
-    #[Route('/shipping-rates', name: 'app_shipping_get_rates')]
+    #[Route('/shipping-rates', name: 'app_shipping_rates')]
     public function getShippingRates(Request $request): Response
     {
         $form = $this->createForm(ShippingRateType::class);

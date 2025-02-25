@@ -25,24 +25,23 @@ class ShippingRateRepository extends ServiceEntityRepository
     public function findMatchingRates(int $originId, int $destinationId, ?float $weight): array
     {
         $queryBuilder = $this->createQueryBuilder('s')
-            // Join with ShippingZone for origin and destination by ID
-            ->innerJoin('s.shippingZone', 'origin')
-            ->innerJoin('s.shippingZone', 'destination')
-            
-            // Filter by origin and destination ShippingZone IDs
-            ->andWhere('origin.id = :originId')
-            ->andWhere('destination.id = :destinationId')
-            
-            // Set parameters for origin and destination IDs
-            ->setParameter('originId', $originId)
-            ->setParameter('destinationId', $destinationId);
+        // Join with ShippingZone for origin and destination by ID
+        ->innerJoin('s.shippingZones', 'origin')
+        ->innerJoin('s.shippingZones', 'destination')
         
+        // Filter by origin and destination ShippingZone IDs
+        ->andWhere('origin.id = :originId')
+        ->andWhere('destination.id = :destinationId');
+    
         // If weight is provided, filter by max weight
         if ($weight) {
-            $queryBuilder
-                ->setParameter('weight', $weight)
-                ->andWhere('s.maxWeight >= :weight');
+            $queryBuilder->andWhere('s.maxWeight >= :weight')
+            ->setParameter('weight', $weight);
         }
+
+        // Set parameters for origin and destination IDs
+        $queryBuilder->setParameter('originId', $originId)
+        ->setParameter('destinationId', $destinationId);        
 
         // Order by price ascending
         return $queryBuilder
