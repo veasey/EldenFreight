@@ -1,3 +1,5 @@
+<?php
+
 namespace App\Entity;
 
 use App\Repository\CourierRepository;
@@ -12,14 +14,19 @@ class ShippingZone
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Courier::class)]
-    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
+    #[ORM\JoinColumn(name: 'courier_id', referencedColumnName: 'id', nullable: false, onDelete: "CASCADE")]
     private ?Courier $courier = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private ?string $shippingZoneName = '';
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $shippingZoneName = null;
 
     #[ORM\ManyToMany(targetEntity: ShippingRate::class, mappedBy: 'shippingZones')]
     private iterable $shippingRates; // Many ShippingRates
+
+    public function __construct()
+    {
+        $this->shippingRates = new \Doctrine\Common\Collections\ArrayCollection(); // Initialize collection
+    }
 
     public function getId(): ?int
     {

@@ -29,6 +29,7 @@ final class Version20250224111149 extends AbstractMigration
         // Create the shipping_zone table
         $this->addSql('CREATE TABLE shipping_zone (
             id INT AUTO_INCREMENT NOT NULL,
+            courier_id INT NOT NULL,
             shipping_zone_name VARCHAR(255) NOT NULL,
             PRIMARY KEY(id)
         ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci`');
