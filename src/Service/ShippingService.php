@@ -37,21 +37,4 @@ class ShippingService
     {
         return $this->shippingRateRepository->findAll();
     }
-
-    private function fetchShippingRate(string $courier, array $api, array $shipmentDetails): array
-    {
-        try {
-            $response = $this->httpClient->request('POST', $api['url'], [
-                'json' => $shipmentDetails,
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Authorization' => 'Bearer ' . $api['key']
-                ]
-            ]);
-
-            return $response->toArray();
-        } catch (\Exception $e) {
-            return ['error' => $e->getMessage()];
-        }
-    }
 }
