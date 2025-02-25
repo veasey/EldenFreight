@@ -17,34 +17,37 @@ class ShippingRateRepository extends ServiceEntityRepository
     /**
      * Find shipping rates by criteria and order by price
      *
-     * @param string $origin
-     * @param string $destination
-     * @param float $weight
+     * @param int $originId
+     * @param int $destinationId
+     * @param float|null $weight
      * @return ShippingRate[] Returns an array of ShippingRate objects
      */
-    public function findMatchingRates(string $origin, string $destination, ?float $weight): array
+    public function findMatchingRates(int $originId, int $destinationId, ?float $weight): array
     {
-
-       $queryBuilder = $this->createQueryBuilder('s');
-     
-       $queryBuilder->setParameter('origin', $origin)
-                    ->setParameter('destination', $destination);
-
-        /*    
-            ->innerJoin('s.origin', 'o')  // Join with the ShippingZone entity for origin
-            ->innerJoin('s.destination', 'd')  // Join with the ShippingZone entity for destination
-            ->andWhere('o.name = :origin')  // Assuming 'name' is the field in ShippingZone entity
-                 ->andWhere('d.name = :destination')  // Assuming 'name' is the field in ShippingZone entity
-     */
-
-        if ($weight) {
-            $queryBuilder->setParameter('weight', $weight)
-                         ->andWhere('s.maxWeight >= :weight');
-        }     
+        $queryBuilder = $this->createQueryBuilder('s')
+            // Join with ShippingZone for origin and destination by ID
+            ->innerJoin('s.shippingZone', 'origin')
+            ->innerJoin('s.shippingZone', 'destination')
             
-    
-        return $queryBuilder->orderBy('s.price', 'ASC')  // Order by price ascending
-                            ->getQuery()
-                            ->getResult();
+            // Filter by origin and destination ShippingZone IDs
+            ->andWhere('origin.id = :originId')
+            ->andWhere('destination.id = :destinationId')
+            
+            // Set parameters for origin and destination IDs
+            ->setParameter('originId', $originId)
+            ->setParameter('destinationId', $destinationId);
+        
+        // If weight is provided, filter by max weight
+        if ($weight) {
+            $queryBuilder
+                ->setParameter('weight', $weight)
+                ->andWhere('s.maxWeight >= :weight');
+        }
+
+        // Order by price ascending
+        return $queryBuilder
+            ->orderBy('s.price', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 }
