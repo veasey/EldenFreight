@@ -35,7 +35,6 @@ final class ApiController extends AbstractController
         }
 
         $rates = $this->shippingService->getShippingRates($data);
-
         return $this->json($rates);
     }
 
