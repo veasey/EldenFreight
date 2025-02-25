@@ -10,9 +10,17 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ShippingRateType extends AbstractType
 {
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -37,5 +45,19 @@ class ShippingRateType extends AbstractType
             ->add('submit', SubmitType::class, [
                 'label' => 'Get Shipping Rates'
             ]);
+    }
+
+    private function getShippingZoneChoices()
+    {
+        // Fetch all shipping zones from the database
+        $shippingZones = $this->entityManager->getRepository(ShippingZone::class)->findAll();
+
+        // Map shipping zone objects to an array of key-value pairs (id => name)
+        $choices = [];
+        foreach ($shippingZones as $zone) {
+            $choices[$zone->getShippingZoneName()] = $zone->getId();
+        }
+
+        return $choices;
     }
 }
