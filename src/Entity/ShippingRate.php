@@ -1,11 +1,9 @@
-<?php
-
 namespace App\Entity;
 
-use App\Repository\CourierRepository;
+use App\Repository\ShippingRateRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CourierRepository::class)]
+#[ORM\Entity(repositoryClass: ShippingRateRepository::class)]
 class ShippingRate
 {
     #[ORM\Id]
@@ -14,21 +12,24 @@ class ShippingRate
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Courier::class)]
-    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
+    #[ORM\JoinColumn(name: 'courier_id', referencedColumnName: 'id', nullable: false, onDelete: "CASCADE")]
     private ?Courier $courier = null;
 
-    #[ORM\ManyToOne(targetEntity: ShippingZone::class)]
-    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
-    private ?int $shippingZoneId = null;
+    #[ORM\ManyToMany(targetEntity: ShippingZone::class, inversedBy: 'shippingRates')]
+    #[ORM\JoinTable(name: 'shipping_rate_shipping_zone')]
+    private iterable $shippingZones; // Many Shipping Zones
 
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $shippingRateName = '';
 
     #[ORM\Column(type: 'decimal', precision: 6, scale: 2)]
-    private ?float $maxWeight = null; // Max weight in kg
+    private ?float $maxWeight = null;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private ?float $maxValue = null; // Max package value in GBP
+    private ?float $maxValue = null;
+
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    private ?float $price = null;
 
     public function getId(): ?int
     {
@@ -40,23 +41,23 @@ class ShippingRate
         return $this->courier;
     }
 
-    public function getShippingZoneId(): ?int
+    // Getters and setters for shippingZones
+    public function getShippingZones(): iterable
     {
-        return $this->shippingZoneId;
+        return $this->shippingZones;
     }
 
-    public function getShippingRateName(): ?string
+    public function addShippingZone(ShippingZone $shippingZone): self
     {
-        return $this->shippingRateName;
+        if (!$this->shippingZones->contains($shippingZone)) {
+            $this->shippingZones[] = $shippingZone;
+        }
+        return $this;
     }
 
-    public function getMaxValue(): ?float
+    public function removeShippingZone(ShippingZone $shippingZone): self
     {
-        return $this->maxValue;
-    }
-
-    public function getMaxWeight(): ?float
-    {
-        return $this->maxWeight;
+        $this->shippingZones->removeElement($shippingZone);
+        return $this;
     }
 }

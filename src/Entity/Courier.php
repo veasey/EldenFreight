@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Repository\CourierRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CourierRepository::class)]
+#[ORM\Entity]
 class Courier
 {
     #[ORM\Id]

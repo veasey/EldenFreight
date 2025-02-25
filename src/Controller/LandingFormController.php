@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\ShippingService;
-use App\Form\ShippingRateRequestType;
+use App\Form\ShippingRateType;
 
 class LandingFormController extends AbstractController
 {
@@ -22,14 +22,17 @@ class LandingFormController extends AbstractController
     #[Route('/', name: 'app_homepage')]
     public function index(): Response
     {
-        return $this->render('shipping_rates/form.html.twig');
+        $form = $this->createForm(ShippingRateType::class);
+
+        return $this->render('shipping_rates/form.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
-    #[Route('/submit', name: 'app_shipping_get_rates')]
+    #[Route('/shipping-rates', name: 'app_shipping_get_rates')]
     public function getShippingRates(Request $request): Response
     {
-        $form = $this->createForm(ShippingRateRequestType::class);
-
+        $form = $this->createForm(ShippingRateType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -43,6 +46,8 @@ class LandingFormController extends AbstractController
             ]);
         }
 
-        return $this->render('shipping_rates/form.html.twig');
+        return $this->render('shipping_rates/form.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 }

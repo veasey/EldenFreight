@@ -22,17 +22,29 @@ class ShippingRateRepository extends ServiceEntityRepository
      * @param float $weight
      * @return ShippingRate[] Returns an array of ShippingRate objects
      */
-    public function findMatchingRates(string $origin, string $destination, float $weight): array
+    public function findMatchingRates(string $origin, string $destination, ?float $weight): array
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.origin = :origin')
-            ->andWhere('s.destination = :destination')
-            ->andWhere('s.weight >= :weight')
-            ->setParameter('origin', $origin)
-            ->setParameter('destination', $destination)
-            ->setParameter('weight', $weight)
-            ->orderBy('s.price', 'ASC')  // Order by price ascending
-            ->getQuery()
-            ->getResult();
+
+       $queryBuilder = $this->createQueryBuilder('s');
+     
+       $queryBuilder->setParameter('origin', $origin)
+                    ->setParameter('destination', $destination);
+
+        /*    
+            ->innerJoin('s.origin', 'o')  // Join with the ShippingZone entity for origin
+            ->innerJoin('s.destination', 'd')  // Join with the ShippingZone entity for destination
+            ->andWhere('o.name = :origin')  // Assuming 'name' is the field in ShippingZone entity
+                 ->andWhere('d.name = :destination')  // Assuming 'name' is the field in ShippingZone entity
+     */
+
+        if ($weight) {
+            $queryBuilder->setParameter('weight', $weight)
+                         ->andWhere('s.maxWeight >= :weight');
+        }     
+            
+    
+        return $queryBuilder->orderBy('s.price', 'ASC')  // Order by price ascending
+                            ->getQuery()
+                            ->getResult();
     }
 }
