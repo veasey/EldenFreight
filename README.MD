@@ -12,4 +12,4 @@ This would be "fed" updated shipping rates by another microservice that would ha
 external services, via whatever integrations are available, and cache them.
 
 I've recorded a thrilling video here showing it in action (as running up a Symfony project is not always straightforward):
-https://youtu.be/vq1Af534sFA
+https://youtu.be/VXtHT0BEw6Q
